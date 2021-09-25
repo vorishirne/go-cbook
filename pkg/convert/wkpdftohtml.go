@@ -7,16 +7,12 @@ import (
 	pdf "github.com/adrg/go-wkhtmltopdf"
 )
 
-func writeConverted(URL, cssFile, outputFile string) {
-	// Initialize library.
-	if err := pdf.Init(); err != nil {
-		log.Fatal(err)
-	}
-	defer pdf.Destroy()
+func writeConverted(URL, cssFile, outputFile string, disableJS bool) {
 
-	// Create object from URL.
 	object2, err := pdf.NewObject(URL)
 	object2.UserStylesheetLocation = cssFile
+	object2.UseLocalLinks = true
+	object2.EnableJavascript = !disableJS
 
 	if err != nil {
 		log.Fatal(err)
@@ -24,7 +20,7 @@ func writeConverted(URL, cssFile, outputFile string) {
 
 	// Create object from reader.
 	converter, err := pdf.NewConverter()
-	converter.Colorspace = pdf.Grayscale
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -41,14 +37,16 @@ func writeConverted(URL, cssFile, outputFile string) {
 	converter.MarginBottom = "4mm"
 	converter.MarginLeft = "2mm"
 	converter.MarginRight = "2mm"
-
+	converter.Colorspace = pdf.Grayscale
 
 	// Convert objects and save the output PDF document.
-	outFile, err := os.Create(outputFile+".pdf")
+	outFile, err := os.Create(outputFile + ".pdf")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer outFile.Close()
+	defer func() {
+		_ = outFile.Close()
+	}()
 
 	if err := converter.Run(outFile); err != nil {
 		log.Fatal(err)
