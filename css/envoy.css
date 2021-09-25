@@ -1,0 +1,16 @@
+body {
+    color: black !important;
+}
+.wy-nav-side{
+    display: none;
+}
+.wy-nav-content-wrap{
+    margin-left: 0 !important;
+}
+.wy-nav-content{
+    padding: 0px !important;
+}
+* {
+    text-decoration-color: black !important;
+    word-wrap: break-word;
+}
