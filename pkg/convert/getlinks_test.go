@@ -15,7 +15,7 @@ func TestMod_GetFilePath(t *testing.T) {
 		BaseDir:    "envoy-blogs",
 		dirVisited: map[string]*DirVisited{},
 	}
-	filePath, fileName, err := m.GetFilePath("https://medium.com/.*/galgodas/@abhbose6/bazel-101-2b0272b15da8/")
+	filePath, fileName, err := m.GetRawFilePath("https://medium.com/.*/galgodas/@abhbose6/bazel-101-2b0272b15da8/")
 	if err != nil {
 		t.Fatal(err)
 	}

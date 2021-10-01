@@ -40,13 +40,28 @@ func AllPages(urlsFilePath, modFilePath string) {
 	//	"css/medium.css", "filter2", true)
 	//writeConverted("https://blog.envoyproxy.io/taming-a-network-filter-44adcf91517",
 	//	"css/medium.css", "filter3", true)
-	writeConverted("https://medium.com/@abhbose6/bazel-101-2b0272b15da8",
-		"css/medium.css", "bazel2", true)
-	writeConverted("https://medium.com/@alishananda/implementing-filters-in-envoy-dcd8fc2d8fda",
-		"css/medium.css", "filter4", true)
+	//writeConverted("https://medium.com/@abhbose6/bazel-101-2b0272b15da8",
+	//	"css/medium.css", "bazel2", true)
+	//writeConverted("https://medium.com/@alishananda/implementing-filters-in-envoy-dcd8fc2d8fda",
+	//	"css/medium.css", "filter4", true)
+	writeConverted("https://istio.io/latest/docs/concepts/traffic-management/",
+		"css/istio.css", "istio1", false)
 }
 
-func (m *Mod) GetFilePath(webUrl string) (dirPath, fileName string, err error) {
+func (m *Mod) GetFilePath(webUrl string) (dirPath string, err error) {
+	rawDirPath, fileName, err := m.GetRawFilePath(webUrl)
+	if err != nil {
+		return
+	}
+	parentDir, itemIndex, err := m.EnsureNumberedDir(rawDirPath)
+	if err != nil {
+		return
+	}
+	dirPath = path.Join(parentDir, itemIndex+fileName+".pdf")
+	return
+}
+
+func (m *Mod) GetRawFilePath(webUrl string) (dirPath, fileName string, err error) {
 
 	webUrlObj, err := url.Parse(webUrl)
 	if err != nil {
@@ -80,47 +95,47 @@ func (m *Mod) GetFilePath(webUrl string) (dirPath, fileName string, err error) {
 	return
 }
 
-func (m *Mod) EnsureNumberedDir(dirPath string) (parentDir, fileCounter string, err error) {
-	if info, ok := m.dirVisited[dirPath]; ok {
+func (m *Mod) EnsureNumberedDir(rawDirPath string) (parentDir, fileCounter string, err error) {
+
+	if info, ok := m.dirVisited[rawDirPath]; ok {
 		info.CountReached++
-		return info.DirPath, info.LastCounterString + "-" + fmt.Sprintf("%03d", info.CountReached), nil
+		parentDir = info.DirPath
+		fileCounter = info.LastCounterString + "-" + fmt.Sprintf("%03d", info.CountReached)
+		return
 	}
-	lastSlash := strings.LastIndexAny(dirPath, "/")
+
+	lastSlash := strings.LastIndexAny(rawDirPath, "/")
 	if lastSlash == -1 {
 		m.BaseDirCountReached++
 		newFileCounter := fmt.Sprintf("%03d", m.BaseDirCountReached)
-		newDirName := path.Join(m.BaseDir, newFileCounter+"-"+dirPath)
+		parentDir = path.Join(m.BaseDir, newFileCounter+"-"+rawDirPath)
 
 		//common code
-		err = os.MkdirAll(newDirName, 0766)
+		err = os.MkdirAll(parentDir, 0766)
 		if err != nil {
 			return
 		}
-		m.dirVisited[dirPath] = &DirVisited{
-			newDirName, 1, newFileCounter}
+		fileCounter = newFileCounter + "-" + fmt.Sprintf("%03d", 1)
+		m.dirVisited[rawDirPath] = &DirVisited{
+			parentDir, 1, newFileCounter}
+	} else {
+		suffixDirPath := rawDirPath[lastSlash+1:]
+		prefixDirPath := rawDirPath[:lastSlash]
+		var newDirName, newFileCounter string
+		newDirName, newFileCounter, err = m.EnsureNumberedDir(prefixDirPath)
+		if err != nil {
+			return
+		}
+		parentDir = path.Join(newDirName, newFileCounter+"-"+suffixDirPath)
 
-		return newDirName, newFileCounter + "-" + fmt.Sprintf("%03d", 1), nil
+		// common code
+		err = os.Mkdir(parentDir, 0766)
+		if err != nil {
+			return
+		}
+		fileCounter = newFileCounter + "-" + fmt.Sprintf("%03d", 1)
+		m.dirVisited[rawDirPath] = &DirVisited{
+			parentDir, 1, newFileCounter}
 	}
-	suffixDirPath := dirPath[lastSlash+1:]
-	prefixDirPath := dirPath[:lastSlash]
-	newDirName, newFileCounter, err := m.EnsureNumberedDir(prefixDirPath)
-	if err != nil {
-		return
-	}
-	parentDir = path.Join(newDirName, newFileCounter+"-"+suffixDirPath)
-	fileCounter = newFileCounter + "-" + fmt.Sprintf("%03d", 1)
-
-	// common code
-	err = os.Mkdir(parentDir, 0766)
-	if err != nil {
-		return
-	}
-	m.dirVisited[dirPath] = &DirVisited{
-		parentDir, 1, newFileCounter}
-
 	return
-}
-
-func createAndUpdateDirInfo(dirName, fileCounter string) {
-
 }

@@ -1,6 +1,7 @@
 package convert
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -19,6 +20,7 @@ func writeConverted(URL, cssFile, outputFile string, disableJS bool) {
 	}
 
 	// Create object from reader.
+	fmt.Print("converter")
 	converter, err := pdf.NewConverter()
 
 	if err != nil {
@@ -30,13 +32,13 @@ func writeConverted(URL, cssFile, outputFile string, disableJS bool) {
 	converter.Add(object2)
 
 	// Set converter options.
-	converter.Title = "Sample document"
-	converter.PaperSize = pdf.B8
+	converter.Title = "Start the fire"
+	converter.PaperSize = pdf.A7
 	converter.Orientation = pdf.Portrait
-	converter.MarginTop = "4mm"
-	converter.MarginBottom = "4mm"
-	converter.MarginLeft = "2mm"
-	converter.MarginRight = "2mm"
+	converter.MarginTop = "1mm"
+	converter.MarginBottom = "0mm"
+	converter.MarginLeft = "1mm"
+	converter.MarginRight = "0mm"
 	converter.Colorspace = pdf.Grayscale
 
 	// Convert objects and save the output PDF document.
