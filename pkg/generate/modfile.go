@@ -2,8 +2,6 @@ package generate
 
 import (
 	"encoding/json"
-	pdf "github.com/adrg/go-wkhtmltopdf"
-	"log"
 	"os"
 	"path"
 )
@@ -24,11 +22,6 @@ type Mod struct {
 }
 
 func AllPagesMod(modFilePath string) (m *Mod, err error) {
-	if err := pdf.Init(); err != nil {
-		log.Fatal(err)
-	}
-	defer pdf.Destroy()
-
 	modFile, err := os.ReadFile(modFilePath)
 	if err != nil {
 		return
