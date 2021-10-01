@@ -1,7 +1,6 @@
-package convert
+package generate
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -12,22 +11,28 @@ func TestMod_GetFilePath(t *testing.T) {
 		// hence, no need for exclusive normalization for scheme
 		BaseUrl:       "https://www.medium.com/.*",
 		BaseDir:       "envoy-blogs",
+		HistPointer:   "i",
 		ObjectOptions: []byte(`{ "userStylesheetLocation": "css/envoy.css"}`),
 		dirVisited:    map[string]*DirVisited{},
 	}
 	filePath, fileName, err := m.GetRawFilePath("https://medium.com/.*/galgodas/@abhbose6/bazel-101-2b0272b15da8/")
 	if err != nil {
-		t.Fatal(err)
+		t.Error(err)
 	}
 	if filePath != "galgodas/@abhbose6" {
-		t.Fatalf("path %v not expected", filePath)
+		t.Errorf("path %v not expected", filePath)
 	}
 	if fileName != "bazel-101-2b0272b15da8" {
-		t.Fatalf("name %v not expected", fileName)
+		t.Errorf("name %v not expected", fileName)
 	}
-	dir, index, err := m.EnsureNumberedDir(filePath)
+	dir, index, err := m.GetIndexedDir(filePath)
 	if err != nil {
-		t.Fatal(err)
+		t.Error(err)
 	}
-	fmt.Println(dir, index)
+	if dir != "envoy-blogs/i01galgodas/i01-01@abhbose6" {
+		t.Error("got path: ", dir)
+	}
+	if index != "i01-01-01" {
+		t.Error("got index: ", index)
+	}
 }

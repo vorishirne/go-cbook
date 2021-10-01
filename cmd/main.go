@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/velcrine/eink-pages/pkg/convert"
+	"log"
 	"runtime"
 )
 
@@ -11,5 +13,10 @@ func init() {
 }
 
 func main() {
-	convert.AllPages(",", "")
+	target := "istio-docs"
+	err := convert.ReadUrlFile(fmt.Sprintf("urls/%v.url", target),
+		fmt.Sprintf("mods/%v.json", target))
+	if err != nil {
+		log.Fatal(err)
+	}
 }
