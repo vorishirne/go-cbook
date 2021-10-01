@@ -1,9 +1,9 @@
 {
-  "cssFile": "css/istio.css",
   "baseUrl": "https://istio.io/latest/docs/",
-  "baseDir" : "docs/istio/",
+  "baseDir": "docs/istio/",
   "histPointer": "i",
   "objectOptions": {
-    "enableJavascript": true
+    "enableJavascript": true,
+    "userStylesheetLocation": "css/istio.css"
   }
 }

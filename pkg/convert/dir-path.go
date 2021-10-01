@@ -66,8 +66,8 @@ func (m *Mod) EnsureNumberedDir(rawDirPath string) (parentDir, fileCounter strin
 
 	lastSlash := strings.LastIndexAny(rawDirPath, "/")
 	if lastSlash == -1 {
-		m.BaseDirCountReached++
-		newFileCounter := fmt.Sprintf("%03d", m.BaseDirCountReached)
+		m.baseDirCountReached++
+		newFileCounter := fmt.Sprintf("%03d", m.baseDirCountReached)
 		parentDir = path.Join(m.BaseDir, newFileCounter+"-"+rawDirPath)
 
 		//common code

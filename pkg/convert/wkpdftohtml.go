@@ -1,37 +1,31 @@
 package convert
 
 import (
-	"fmt"
-	"log"
+	"encoding/json"
 	"os"
 
 	pdf "github.com/adrg/go-wkhtmltopdf"
 )
 
-func writeConverted(URL, cssFile, outputFile string, disableJS bool) {
+func (m *Mod) GenPDF(URL, outputFilePath string) (err error) {
 
-	object2, err := pdf.NewObject(URL)
-	object2.UserStylesheetLocation = cssFile
-	object2.UseLocalLinks = true
-	object2.EnableJavascript = !disableJS
-
+	object, err := pdf.NewObject(URL)
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
 
-	// Create object from reader.
-	fmt.Print("converter")
-	converter, err := pdf.NewConverter()
-
+	object.UseLocalLinks = true
+	err = json.Unmarshal(m.ObjectOptions, &object)
 	if err != nil {
-		log.Fatal(err)
+		return
+	}
+
+	converter, err := pdf.NewConverter()
+	if err != nil {
+		return
 	}
 	defer converter.Destroy()
 
-	// Add created objects to the converter.
-	converter.Add(object2)
-
-	// Set converter options.
 	converter.Title = "Start the fire"
 	converter.PaperSize = pdf.A7
 	converter.Orientation = pdf.Portrait
@@ -40,17 +34,19 @@ func writeConverted(URL, cssFile, outputFile string, disableJS bool) {
 	converter.MarginLeft = "1mm"
 	converter.MarginRight = "0mm"
 	converter.Colorspace = pdf.Grayscale
+	err = json.Unmarshal(m.ConverterOptions, &converter)
 
-	// Convert objects and save the output PDF document.
-	outFile, err := os.Create(outputFile + ".pdf")
+	outFile, err := os.Create(outputFilePath)
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
 	defer func() {
 		_ = outFile.Close()
 	}()
 
-	if err := converter.Run(outFile); err != nil {
-		log.Fatal(err)
+	converter.Add(object)
+	if err = converter.Run(outFile); err != nil {
+		return
 	}
+	return
 }
