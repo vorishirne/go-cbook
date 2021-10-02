@@ -1,6 +1,17 @@
-#blog .Article{
+* {
+    word-wrap: break-word;
+}
+
+#blog .Article {
     padding: 0 !important;
 }
+
 footer {
     display: none;
+}
+
+#blog pre {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: break-spaces;
 }

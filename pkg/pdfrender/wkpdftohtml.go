@@ -21,7 +21,11 @@ func (m *Mod) GenPDF(URL, outputFilePath string) (err error) {
 	// updating html related properties
 	object.UseLocalLinks = true
 	// properties from mod file
-	err = json.Unmarshal(m.ObjectOptions, &object)
+	// if and only if there is something to override, otherwise it will return error
+	// e: unexpected end of JSON input
+	if len(m.ObjectOptions) > 0 {
+		err = json.Unmarshal(m.ObjectOptions, &object)
+	}
 	if err != nil {
 		return
 	}
@@ -37,13 +41,17 @@ func (m *Mod) GenPDF(URL, outputFilePath string) (err error) {
 	converter.Title = "Start the fire"
 	converter.PaperSize = pdf.A7
 	converter.Orientation = pdf.Portrait
-	converter.MarginTop = "1mm"
+	converter.MarginTop = "0mm"
 	converter.MarginBottom = "0mm"
-	converter.MarginLeft = "1mm"
+	converter.MarginLeft = "0mm"
 	converter.MarginRight = "0mm"
 	converter.Colorspace = pdf.Grayscale
 	// properties from mod file
-	err = json.Unmarshal(m.ConverterOptions, &converter)
+	// if and only if there is something to override, otherwise it will return error
+	// e: unexpected end of JSON input
+	if len(m.ConverterOptions) > 0 {
+		err = json.Unmarshal(m.ConverterOptions, &converter)
+	}
 	if err != nil {
 		return
 	}
