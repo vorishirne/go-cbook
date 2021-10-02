@@ -1,55 +1,62 @@
-package generate
+package pdfrender
 
 import (
 	"fmt"
+	"github.com/watergist/file-engine/reader"
 	"net/url"
 	"path"
 	"strings"
 )
 
+// GetRawFilePath takes the Url to be rendered and extracts the final rawPath
+// either from url path or fragment
+// returns the dir in which the pdf be created and the name of the pdf file.
 func (m *Mod) GetRawFilePath(webPageUrl string) (
-	fileParentDir, fileName string, err error) {
+	dirPath, fileName string, err error) {
 
+	// parse base url from mod & the url to render
 	webPageUrlObj, err := url.Parse(webPageUrl)
 	if err != nil {
 		return "", "", err
 	}
-
 	baseUrlObj, err := url.Parse(m.BaseUrl)
 	if err != nil {
 		return "", "", err
 	}
+
+	// get their trimmed paths
 	webPageUrlPath := strings.Trim(webPageUrlObj.Path, "/")
 	baseUrlPath := strings.Trim(baseUrlObj.Path, "/")
+
+	var filePath string
+	// if it has some piece of fragment, then pick fragment as filePath
+	// this trick is used to set filePath for blogs, that have no standard filePath structure
 	if webPageUrlObj.Fragment != "" {
-		fileParentDir = webPageUrlObj.Fragment
+		filePath = webPageUrlObj.Fragment
 	} else if strings.HasPrefix(webPageUrlPath, baseUrlPath) {
-		fileParentDir = strings.TrimPrefix(webPageUrlPath, baseUrlPath)
+		// else originally remove basePath from urlPath to get filePath
+		filePath = strings.TrimPrefix(webPageUrlPath, baseUrlPath)
 	} else {
+		// no options left to get filePath
 		err = fmt.Errorf("mod base url %v not valid for %v",
 			webPageUrlPath, baseUrlPath)
 		return
 	}
-	fileParentDir = strings.Trim(fileParentDir, "/")
-	if fileParentDir == "" {
-		err = fmt.Errorf("filepath is empty")
-		return
-	}
-	lastSlash := strings.LastIndexAny(fileParentDir, "/")
-
-	fileName = fileParentDir[lastSlash+1:]
-	if lastSlash == -1 {
-		lastSlash++
-	}
-	fileParentDir = fileParentDir[:lastSlash]
-	if fileParentDir == "" {
-		err = fmt.Errorf("no directory to write file to")
-	}
+	// break filePath into dirPath and fileName
+	dirPath, fileName, err = reader.GetDirPathAndFileName(filePath, true)
 	return
 }
 
-// index is like 01-02-01abx.pdf
+// this is the super complex and most tough function that had me waited for it
+// for days to proceed in this repo
 
+// GetIndexedDir recursively iterate through each subDir in the dirPath
+// to return the indexedPath for the respective raw input path, along with a new
+// index to be given to a file to be created in that indexedDir.
+// It takes care for maintaining a cache of it's results,
+//to save calls to subDir that
+// have already been visited and also peeks from that cache first,
+// before doing iteration on it.
 func (m *Mod) GetIndexedDir(rawDir string) (indexedCurrentDir, indexForNewItem string, err error) {
 
 	if visitedDir, ok := m.dirVisited[rawDir]; ok {
