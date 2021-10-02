@@ -1,0 +1,6 @@
+#blog .Article{
+    padding: 0 !important;
+}
+footer {
+    display: none;
+}

@@ -7,9 +7,10 @@ import (
 	"strings"
 )
 
-func (m *Mod) GetRawFilePath(webUrl string) (dirPath, fileName string, err error) {
+func (m *Mod) GetRawFilePath(webPageUrl string) (
+	fileParentDir, fileName string, err error) {
 
-	webUrlObj, err := url.Parse(webUrl)
+	webPageUrlObj, err := url.Parse(webPageUrl)
 	if err != nil {
 		return "", "", err
 	}
@@ -18,25 +19,31 @@ func (m *Mod) GetRawFilePath(webUrl string) (dirPath, fileName string, err error
 	if err != nil {
 		return "", "", err
 	}
-	webUrlPath := strings.Trim(webUrlObj.Path, "/")
+	webPageUrlPath := strings.Trim(webPageUrlObj.Path, "/")
 	baseUrlPath := strings.Trim(baseUrlObj.Path, "/")
-	if !strings.HasPrefix(webUrlPath, baseUrlPath) {
-		return "", "", fmt.Errorf("mod base url %v not valid for %v", webUrlPath, baseUrlPath)
+	if webPageUrlObj.Fragment != "" {
+		fileParentDir = webPageUrlObj.Fragment
+	} else if strings.HasPrefix(webPageUrlPath, baseUrlPath) {
+		fileParentDir = strings.TrimPrefix(webPageUrlPath, baseUrlPath)
+	} else {
+		err = fmt.Errorf("mod base url %v not valid for %v",
+			webPageUrlPath, baseUrlPath)
+		return
 	}
-
-	dirPath = strings.Trim(strings.TrimPrefix(webUrlPath, baseUrlPath), "/")
-	if dirPath == "" {
-		return "", "", fmt.Errorf("filepath is empty")
+	fileParentDir = strings.Trim(fileParentDir, "/")
+	if fileParentDir == "" {
+		err = fmt.Errorf("filepath is empty")
+		return
 	}
-	lastSlash := strings.LastIndexAny(dirPath, "/")
+	lastSlash := strings.LastIndexAny(fileParentDir, "/")
 
-	fileName = dirPath[lastSlash+1:]
+	fileName = fileParentDir[lastSlash+1:]
 	if lastSlash == -1 {
 		lastSlash++
 	}
-	dirPath = dirPath[:lastSlash]
-	if dirPath == "" {
-		return "", "", fmt.Errorf("no directory to write file to")
+	fileParentDir = fileParentDir[:lastSlash]
+	if fileParentDir == "" {
+		err = fmt.Errorf("no directory to write file to")
 	}
 	return
 }

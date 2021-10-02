@@ -19,7 +19,7 @@ func main() {
 	}
 	defer pdf.Destroy()
 
-	target := "istio-docs"
+	target := "go-blogs"
 	err := convert.ReadUrlFile(fmt.Sprintf("urls/%v.url", target),
 		fmt.Sprintf("mods/%v.json", target))
 	if err != nil {

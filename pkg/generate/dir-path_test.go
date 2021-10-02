@@ -15,7 +15,7 @@ func TestMod_GetFilePath(t *testing.T) {
 		ObjectOptions: []byte(`{ "userStylesheetLocation": "css/envoy.css"}`),
 		dirVisited:    map[string]*DirVisited{},
 	}
-	filePath, fileName, err := m.GetRawFilePath("https://medium.com/.*/galgodas/@abhbose6/bazel-101-2b0272b15da8/")
+	filePath, fileName, err := m.GetRawFilePath("https://medium.com/.*/galgodas/@abhbose6/bazel-101-2b0272b15da8/#/whereisid/sdfsd/")
 	if err != nil {
 		t.Error(err)
 	}

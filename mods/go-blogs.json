@@ -1,0 +1,9 @@
+{
+  "baseUrl": "https://go.dev/blog/",
+  "baseDir": "blog/go/",
+  "histPointer": "g",
+  "objectOptions": {
+    "enableJavascript": true,
+    "userStylesheetLocation": "css/go-blog.css"
+  }
+}
