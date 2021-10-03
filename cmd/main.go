@@ -16,6 +16,17 @@ func init() {
 }
 
 func main() {
+
+	// flags, glob, global css, readme, ensureDir fn
+	// repeat for file-engine and
+	// committer : see difference
+	// release both
+	// git config global in all
+	// reach upto mohit in galgodas, remv mohit professor name
+
+	// make galgodas ready: as to remove main package to respective, and remove indexing
+	// import flutter repo, as it has nothing as part of improved commit. : change commit time, to september, so as to make the commits count for long
+
 	// one more constraint from qt,
 	// init must be called from main function
 
