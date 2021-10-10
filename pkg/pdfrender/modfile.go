@@ -4,7 +4,10 @@ import (
 	"encoding/json"
 	"os"
 	"path"
+	"strings"
 )
+
+var webPageExtensions = []string{"html", "md", "htm", "hbs", "cms", "php"}
 
 // DirVisited allows you to save below information for multiple urls
 // not just for caching purpose, but also for to keep track of info for created dirs
@@ -31,7 +34,10 @@ type Mod struct {
 	// these options are passed to the wkhtmltopdf converter
 	// could be used for overriding default ones in this repository
 	ConverterOptions json.RawMessage
-	//				 map[rawFilePath]dataForIndex
+	// IsMD is set when the url ends with .md
+	// it is set iteratively everytime a url is processed
+	IsMD bool
+	//		   map[rawFilePath]dataForIndex
 	dirVisited map[string]*DirVisited
 	// no. of items in Mod.BaseDir
 	baseDirLastIndex int8
@@ -44,7 +50,8 @@ func GetMod(modFilePath string) (m *Mod, err error) {
 		return
 	}
 	m = &Mod{}
-	// dirVisited is hidden and not expected to come from json
+
+	// dirVisited is unexported field and not expected to be loaded from mod json
 	m.dirVisited = map[string]*DirVisited{}
 	err = json.Unmarshal(modFile, m)
 	return
@@ -58,15 +65,32 @@ func (m *Mod) GetFilePath(webUrl string) (filePath string, err error) {
 	if err != nil {
 		return
 	}
+
 	// 2. Converts it to indexed one
 	parentDir, itemIndex, err := m.GetIndexedDir(rawDirPath)
 	if err != nil {
 		return
 	}
+
 	//  & creates that dir, even if its already there
 	err = os.MkdirAll(parentDir, 0766)
 	if err != nil {
 		return
+	}
+
+	//finally, the file name can have .html/.md/.htm at the end of it, remove them
+	extension := ""
+	for _, extensions := range webPageExtensions {
+		if strings.HasSuffix(fileName, "."+extensions) {
+			extension = "." + extensions
+			break
+		}
+	}
+	fileName = strings.TrimSuffix(fileName, extension)
+	if extension == ".md" {
+		m.IsMD = true
+	} else {
+		m.IsMD = false
 	}
 	// 3. Returns the final filePath to be used to create pdf at.
 	filePath = path.Join(parentDir, itemIndex+fileName+".pdf")

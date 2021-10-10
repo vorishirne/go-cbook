@@ -1,4 +1,4 @@
-package pdfrender
+package render
 
 import (
 	"encoding/json"
@@ -11,20 +11,20 @@ import (
 // URL is passed as is to the wkhtmltopdf
 // and outputFilePath is provided as the destination to write file to as is
 // meanwhile, object and converter options from mod file are overridden
-func (m *Mod) GenPDF(URL, outputFilePath string) (err error) {
-	// wkhtmltopdf object contains html specific configuration
-	object, err := pdf.NewObject(URL)
+func (r *Render) GenPDF() (err error) {
+	htmlObject, err := pdf.NewObject(r.URL)
 	if err != nil {
 		return
 	}
 
 	// updating html related properties
-	object.UseLocalLinks = true
+	htmlObject.UseLocalLinks = true
+
 	// properties from mod file
-	// if and only if there is something to override, otherwise it will return error
+	// if and only if there is something to override, otherwise json unmarshal gives error
 	// e: unexpected end of JSON input
-	if len(m.ObjectOptions) > 0 {
-		err = json.Unmarshal(m.ObjectOptions, &object)
+	if len(r.ObjectOptions) > 0 {
+		err = json.Unmarshal(r.ObjectOptions, &htmlObject)
 	}
 	if err != nil {
 		return
@@ -46,17 +46,18 @@ func (m *Mod) GenPDF(URL, outputFilePath string) (err error) {
 	converter.MarginLeft = "0mm"
 	converter.MarginRight = "0mm"
 	converter.Colorspace = pdf.Grayscale
+
 	// properties from mod file
-	// if and only if there is something to override, otherwise it will return error
+	// if and only if there is something to override, otherwise json unmarshal gives error
 	// e: unexpected end of JSON input
-	if len(m.ConverterOptions) > 0 {
-		err = json.Unmarshal(m.ConverterOptions, &converter)
+	if len(r.ConverterOptions) > 0 {
+		err = json.Unmarshal(r.ConverterOptions, &converter)
 	}
 	if err != nil {
 		return
 	}
 
-	outFile, err := os.Create(outputFilePath)
+	outFile, err := os.Create(r.OutputFilePath)
 	if err != nil {
 		return
 	}
@@ -64,8 +65,8 @@ func (m *Mod) GenPDF(URL, outputFilePath string) (err error) {
 		_ = outFile.Close()
 	}()
 
-	// render pdf for the above object
-	converter.Add(object)
+	// render pdf for the above created object
+	converter.Add(htmlObject)
 	if err = converter.Run(outFile); err != nil {
 		return
 	}

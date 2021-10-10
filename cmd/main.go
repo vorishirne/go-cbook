@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	pdf "github.com/adrg/go-wkhtmltopdf"
-	"github.com/velcrine/eink-pages/pkg/pdfrender"
+	"github.com/velcrine/eink-pages/pkg/config"
 	"log"
 	"runtime"
 )
@@ -41,7 +41,7 @@ func main() {
 	// RenderFromUrlFile is the root function to iterate
 	// over every url present in the provided url file
 	// and calls pdfrender process
-	err := pdfrender.RenderFromUrlFile(fmt.Sprintf("urls/%v.url", target),
+	err := config.RenderFromUrlFile(fmt.Sprintf("urls/%v.url", target),
 		fmt.Sprintf("mods/%v.json", target))
 	if err != nil {
 		log.Fatal(err)

@@ -1,7 +1,9 @@
-package pdfrender
+package config
 
 import (
 	"errors"
+	"github.com/velcrine/eink-pages/pkg/pdfrender"
+	"github.com/velcrine/eink-pages/pkg/render"
 	"github.com/watergist/file-engine/reader"
 	"github.com/watergist/file-engine/reader/structure"
 	"io/fs"
@@ -13,7 +15,7 @@ import (
 // RenderFromUrlFile iterates to every link present in .url file
 // and run rendering process on each.
 func RenderFromUrlFile(urlFilePath string, modeFilePath string) (err error) {
-	m, err := GetMod(modeFilePath)
+	m, err := pdfrender.GetMod(modeFilePath)
 	if err != nil {
 		return
 	}
@@ -33,7 +35,7 @@ func RenderFromUrlFile(urlFilePath string, modeFilePath string) (err error) {
 			_, e := os.Stat(filePath)
 			// if it not exists
 			if errors.Is(e, fs.ErrNotExist) {
-				err = m.GenPDF(line, filePath)
+				err = render.Do(m, line, filePath)
 			}
 		}
 		return

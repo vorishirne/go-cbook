@@ -1,15 +1,19 @@
 body {
     color: black !important;
 }
-.wy-nav-side{
+
+.wy-nav-side {
     display: none;
 }
-.wy-nav-content-wrap{
+
+.wy-nav-content-wrap {
     margin-left: 0 !important;
 }
-.wy-nav-content{
-    padding: 0px !important;
+
+.wy-nav-content {
+    padding: 0 !important;
 }
+
 * {
     text-decoration-color: black !important;
     word-wrap: break-word;
