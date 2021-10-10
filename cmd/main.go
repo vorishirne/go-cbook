@@ -40,7 +40,7 @@ func main() {
 
 	// RenderFromUrlFile is the root function to iterate
 	// over every url present in the provided url file
-	// and calls pdfrender process
+	// and calls pdf-render process
 	err := config.RenderFromUrlFile(fmt.Sprintf("urls/%v.url", target),
 		fmt.Sprintf("mods/%v.json", target))
 	if err != nil {

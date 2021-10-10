@@ -2,6 +2,7 @@ package render
 
 import (
 	"encoding/json"
+	"log"
 	"os"
 
 	pdf "github.com/adrg/go-wkhtmltopdf"
@@ -23,8 +24,8 @@ func (r *Render) GenPDF() (err error) {
 	// properties from mod file
 	// if and only if there is something to override, otherwise json unmarshal gives error
 	// e: unexpected end of JSON input
-	if len(r.ObjectOptions) > 0 {
-		err = json.Unmarshal(r.ObjectOptions, &htmlObject)
+	if len(*r.ObjectOptions) > 0 {
+		err = json.Unmarshal(*r.ObjectOptions, &htmlObject)
 	}
 	if err != nil {
 		return
@@ -40,7 +41,7 @@ func (r *Render) GenPDF() (err error) {
 	// updating pdf related properties
 	converter.Title = "Start the fire"
 	converter.PaperSize = pdf.A7
-	converter.Orientation = pdf.Portrait
+	converter.Orientation = pdf.Landscape
 	converter.MarginTop = "0mm"
 	converter.MarginBottom = "0mm"
 	converter.MarginLeft = "0mm"
@@ -50,8 +51,8 @@ func (r *Render) GenPDF() (err error) {
 	// properties from mod file
 	// if and only if there is something to override, otherwise json unmarshal gives error
 	// e: unexpected end of JSON input
-	if len(r.ConverterOptions) > 0 {
-		err = json.Unmarshal(r.ConverterOptions, &converter)
+	if len(*r.ConverterOptions) > 0 {
+		err = json.Unmarshal(*r.ConverterOptions, &converter)
 	}
 	if err != nil {
 		return
@@ -63,6 +64,12 @@ func (r *Render) GenPDF() (err error) {
 	}
 	defer func() {
 		_ = outFile.Close()
+		if err != nil {
+			err = os.Remove(r.OutputFilePath)
+			if err != nil {
+				log.Println("Failed to delete corrupt file", err)
+			}
+		}
 	}()
 
 	// render pdf for the above created object

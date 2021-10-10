@@ -30,10 +30,10 @@ type Mod struct {
 	HistPointer string
 	// these options are passed to the wkhtmltopdf object
 	// could be used for overriding default ones in this repository
-	ObjectOptions json.RawMessage
+	ObjectOptions *json.RawMessage
 	// these options are passed to the wkhtmltopdf converter
 	// could be used for overriding default ones in this repository
-	ConverterOptions json.RawMessage
+	ConverterOptions *json.RawMessage
 	// IsMD is set when the url ends with .md
 	// it is set iteratively everytime a url is processed
 	IsMD bool

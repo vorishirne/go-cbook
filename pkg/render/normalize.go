@@ -18,10 +18,10 @@ const TempHTMLFilePath = GoReaderRenderTempDir + "/current.html"
 type Render struct {
 	// these options are passed to the wkhtmltopdf object
 	// could be used for overriding default ones in this repository
-	ObjectOptions json.RawMessage
+	ObjectOptions *json.RawMessage
 	// these options are passed to the wkhtmltopdf converter
 	// could be used for overriding default ones in this repository
-	ConverterOptions json.RawMessage
+	ConverterOptions *json.RawMessage
 	// the url to webPage or path to html page in local
 	URL string
 
@@ -41,7 +41,7 @@ func Do(m *pdfrender.Mod, URL, outputFilePath string) (err error) {
 	if err != nil {
 		return
 	}
-	//render.GenPDF
+	err = render.GenPDF()
 	return
 }
 
