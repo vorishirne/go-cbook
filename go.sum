@@ -2,6 +2,8 @@ github.com/adrg/go-wkhtmltopdf v0.2.2 h1:wWtR9L6WlvJR1A8p+OneydL7WzpVGCe+QeCtK+3
 github.com/adrg/go-wkhtmltopdf v0.2.2/go.mod h1:PabO59E2w5GMKC8apqcXmf5rZZmiydIP3H1Wb4Uox6I=
 github.com/gomarkdown/markdown v0.0.0-20210918233619-6c1113f12c4a h1:syEwbl3pF5Y1mnIStrPwqd50vNU1AAKuAy8HFCPAgUc=
 github.com/gomarkdown/markdown v0.0.0-20210918233619-6c1113f12c4a/go.mod h1:JDGcbDT52eL4fju3sZ4TeHGsQwhG9nbDV21aMyhwPoA=
+github.com/watergist/file-engine v1.3.3-0.20211002190114-a4280d1a74b3 h1:y2t/1HikmKUVL11xG8VGLjXsp6t31qRg1C2lFcuPhK4=
+github.com/watergist/file-engine v1.3.3-0.20211002190114-a4280d1a74b3/go.mod h1:A4GJ+wvPMhFAOGYDz4WxMRlQW42n+tXQJi0bD6l0Ee0=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v2 v2.4.0 h1:D8xgwECY7CYvx+Y2n4sBz93Jn9JRvxdiyyo8CTfuKaY=

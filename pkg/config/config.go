@@ -2,8 +2,8 @@ package config
 
 import (
 	"errors"
-	"github.com/velcrine/eink-pages/pkg/pdfrender"
-	"github.com/velcrine/eink-pages/pkg/render"
+	"github.com/velcrine/goreader/pkg/pdfrender"
+	"github.com/velcrine/goreader/pkg/render"
 	"github.com/watergist/file-engine/reader"
 	"github.com/watergist/file-engine/reader/structure"
 	"io/fs"

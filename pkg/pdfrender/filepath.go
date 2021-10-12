@@ -29,7 +29,7 @@ func (m *Mod) GetRawFilePath(webPageUrl string) (filePath string, err error) {
 	// if it has some piece of fragment, then pick fragment as filePath
 	// this trick is used to set filePath for blogs, that have no standard filePath structure
 	if webPageUrlObj.Fragment != "" {
-		filePath = webPageUrlObj.Fragment
+		filePath = strings.Trim(webPageUrlObj.Fragment, "/")
 	} else if strings.HasPrefix(webPageUrlPath, baseUrlPath) {
 		// else originally remove basePath from urlPath to get filePath
 		filePath = strings.TrimPrefix(webPageUrlPath, baseUrlPath)

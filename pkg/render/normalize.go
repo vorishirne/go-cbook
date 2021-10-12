@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/parser"
-	"github.com/velcrine/eink-pages/pkg/pdfrender"
+	"github.com/velcrine/goreader/pkg/pdfrender"
 	"github.com/watergist/file-engine/reader"
 	"github.com/watergist/file-engine/webclient"
 	"os"
