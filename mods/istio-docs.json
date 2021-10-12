@@ -2,8 +2,8 @@
   "baseUrl": "https://istio.io/latest/docs/",
   "baseDir": "docs/istio/",
   "histPointer": "i",
+  "cssZOverrideFile": "css/istio.css",
   "objectOptions": {
-    "enableJavascript": true,
-    "userStylesheetLocation": "css/istio.css"
+    "enableJavascript": true
   }
 }

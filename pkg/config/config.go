@@ -41,8 +41,10 @@ func RenderFromUrlFile(urlFilePath string, modeFilePath string) (err error) {
 		return
 	}
 	errMap, err := reader.CallbackOnEachLine(urlFilePath, readLineCallback)
+	err = m.SaveDirVisited()
 	// so errMap is a dict for key: url, v: error returned while rendering it.
 	structure.WriteYaml(
 		path.Join(m.BaseDir, m.HistPointer+"err.yaml"), errMap)
+
 	return
 }

@@ -24,7 +24,7 @@ func (r *Render) GenPDF() (err error) {
 	// properties from mod file
 	// if and only if there is something to override, otherwise json unmarshal gives error
 	// e: unexpected end of JSON input
-	if len(*r.ObjectOptions) > 0 {
+	if r.ObjectOptions != nil && len(*r.ObjectOptions) > 0 {
 		err = json.Unmarshal(*r.ObjectOptions, &htmlObject)
 	}
 	if err != nil {
@@ -51,7 +51,7 @@ func (r *Render) GenPDF() (err error) {
 	// properties from mod file
 	// if and only if there is something to override, otherwise json unmarshal gives error
 	// e: unexpected end of JSON input
-	if len(*r.ConverterOptions) > 0 {
+	if r.ConverterOptions != nil && len(*r.ConverterOptions) > 0 {
 		err = json.Unmarshal(*r.ConverterOptions, &converter)
 	}
 	if err != nil {

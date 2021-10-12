@@ -2,7 +2,6 @@ package pdfrender
 
 import (
 	"fmt"
-	"github.com/watergist/file-engine/reader"
 	"net/url"
 	"path"
 	"strings"
@@ -11,24 +10,22 @@ import (
 // GetRawFilePath takes the Url to be rendered and extracts the final rawPath
 // either from url path or fragment
 // returns the dir in which the pdf be created and the name of the pdf file.
-func (m *Mod) GetRawFilePath(webPageUrl string) (
-	dirPath, fileName string, err error) {
+func (m *Mod) GetRawFilePath(webPageUrl string) (filePath string, err error) {
 
 	// parse base url from mod & the url to render
 	webPageUrlObj, err := url.Parse(webPageUrl)
 	if err != nil {
-		return "", "", err
+		return
 	}
 	baseUrlObj, err := url.Parse(m.BaseUrl)
 	if err != nil {
-		return "", "", err
+		return
 	}
 
 	// get their trimmed paths
 	webPageUrlPath := strings.Trim(webPageUrlObj.Path, "/")
 	baseUrlPath := strings.Trim(baseUrlObj.Path, "/")
 
-	var filePath string
 	// if it has some piece of fragment, then pick fragment as filePath
 	// this trick is used to set filePath for blogs, that have no standard filePath structure
 	if webPageUrlObj.Fragment != "" {
@@ -43,7 +40,6 @@ func (m *Mod) GetRawFilePath(webPageUrl string) (
 		return
 	}
 	// break filePath into dirPath and fileName
-	dirPath, fileName, err = reader.GetDirPathAndFileName(filePath, true)
 	return
 }
 
@@ -68,23 +64,29 @@ func (m *Mod) GetIndexedDir(rawDir string) (indexedCurrentDir, indexForNewItem s
 
 	slashLastIndex := strings.LastIndexAny(rawDir, "/")
 	rawCurrentDir := rawDir[slashLastIndex+1:]
-	var indexForCurrentDir string
 	if slashLastIndex == -1 {
-		m.baseDirLastIndex++
-		indexForCurrentDir = m.HistPointer + fmt.Sprintf("%02d", m.baseDirLastIndex)
-		indexedCurrentDir = path.Join(m.BaseDir, indexForCurrentDir+rawCurrentDir)
-	} else {
-		rawParentDir := rawDir[:slashLastIndex]
-		var indexedParentDir string
-		indexedParentDir, indexForCurrentDir, err = m.GetIndexedDir(rawParentDir)
-		if err != nil {
-			return
-		}
-		indexedCurrentDir = path.Join(indexedParentDir, indexForCurrentDir+rawCurrentDir)
+		slashLastIndex = 0
 	}
+	rawParentDir := rawDir[:slashLastIndex]
+
+	var indexedParentDir, indexForCurrentDir string
+	indexedParentDir, indexForCurrentDir, err = m.GetIndexedDir(rawParentDir)
+	if err != nil {
+		return
+	}
+	indexedCurrentDir = path.Join(indexedParentDir, indexForCurrentDir+rawCurrentDir)
 
 	indexForNewItem = indexForCurrentDir + "-" + fmt.Sprintf("%02d", 1)
 	m.dirVisited[rawDir] = &DirVisited{
 		indexedCurrentDir, 1, indexForCurrentDir}
+	return
+}
+
+func (m *Mod) GetIndexedFilePath(rawPath string) (indexedCurrentFilePath string, err error) {
+	if visitedDir, ok := m.dirVisited[rawPath]; ok {
+		indexedCurrentFilePath = visitedDir.IndexedDirPath
+		return
+	}
+	indexedCurrentFilePath, _, err = m.GetIndexedDir(rawPath)
 	return
 }

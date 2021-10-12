@@ -1,7 +1,10 @@
 package pdfrender
 
 import (
+	"encoding/gob"
 	"encoding/json"
+	"errors"
+	"github.com/watergist/file-engine/reader"
 	"os"
 	"path"
 	"strings"
@@ -21,6 +24,8 @@ type DirVisited struct {
 	DirIndex string
 }
 type Mod struct {
+	// this file is merged with global css rules and passed to wkhtmltopdf
+	CssOverrideFile string
 	// the base url to be taken away as prefix from the urls' paths
 	BaseUrl string
 	// base parent dir to all the dirs
@@ -39,8 +44,6 @@ type Mod struct {
 	IsMD bool
 	//		   map[rawFilePath]dataForIndex
 	dirVisited map[string]*DirVisited
-	// no. of items in Mod.BaseDir
-	baseDirLastIndex int8
 }
 
 // GetMod prepares the Mod struct from mod json file provided
@@ -51,9 +54,62 @@ func GetMod(modFilePath string) (m *Mod, err error) {
 	}
 	m = &Mod{}
 
-	// dirVisited is unexported field and not expected to be loaded from mod json
-	m.dirVisited = map[string]*DirVisited{}
 	err = json.Unmarshal(modFile, m)
+	if err != nil {
+		return
+	}
+
+	err = m.GetDirVisited()
+	if err != nil {
+		return
+	}
+
+	m.BaseDir = strings.TrimSuffix(m.BaseDir, "/")
+	return
+}
+
+// GetDirVisited tries a lookup for locally stored .gob file that holds the
+// index for already existing pdf files.
+func (m *Mod) GetDirVisited() (err error) {
+	dirIndexGobPath := strings.ReplaceAll(m.BaseDir, "/", "-")
+	dirIndexGobPath = strings.Trim(dirIndexGobPath, "-")
+	dirIndexGobPath = path.Join(m.BaseDir, dirIndexGobPath) + ".gob"
+	_, err = os.Stat(dirIndexGobPath)
+	if errors.Is(err, os.ErrNotExist) {
+		err = nil
+		m.dirVisited = map[string]*DirVisited{"": {
+			IndexedDirPath: m.BaseDir,
+			ItemCount:      0,
+			DirIndex:       m.HistPointer,
+		}}
+		return
+	}
+	gobFile, err := os.Open(dirIndexGobPath)
+	defer gobFile.Close()
+	if err != nil {
+		return
+	}
+	gobDecoder := gob.NewDecoder(gobFile)
+	err = gobDecoder.Decode(&m.dirVisited)
+	if err != nil {
+		return
+	}
+	return
+}
+
+// SaveDirVisited does exactly opposite
+// it does the saving for the file
+func (m *Mod) SaveDirVisited() (err error) {
+	dirIndexGobPath := strings.ReplaceAll(m.BaseDir, "/", "-")
+	dirIndexGobPath = strings.TrimPrefix(dirIndexGobPath, "-")
+	dirIndexGobPath = path.Join(m.BaseDir, dirIndexGobPath) + ".gob"
+	gobFile, err := os.Create(dirIndexGobPath)
+	if err != nil {
+		return
+	}
+	defer gobFile.Close()
+	gobEncoder := gob.NewEncoder(gobFile)
+	err = gobEncoder.Encode(m.dirVisited)
 	return
 }
 
@@ -61,15 +117,20 @@ func GetMod(modFilePath string) (m *Mod, err error) {
 // indexed dir from the url path or url fragment
 func (m *Mod) GetFilePath(webUrl string) (filePath string, err error) {
 	// 1. Extracts raw filepath from url.
-	rawDirPath, fileName, err := m.GetRawFilePath(webUrl)
+	rawFilePath, err := m.GetRawFilePath(webUrl)
 	if err != nil {
 		return
 	}
 
 	// 2. Converts it to indexed one
-	parentDir, itemIndex, err := m.GetIndexedDir(rawDirPath)
+	filePath, err = m.GetIndexedFilePath(rawFilePath)
 	if err != nil {
 		return
+	}
+
+	parentDir, fileName, err := reader.GetDirPathAndFileName(filePath, true)
+	if errors.Is(err, reader.ErrorNoBasePath) {
+		err = nil
 	}
 
 	//  & creates that dir, even if its already there
@@ -86,13 +147,13 @@ func (m *Mod) GetFilePath(webUrl string) (filePath string, err error) {
 			break
 		}
 	}
-	fileName = strings.TrimSuffix(fileName, extension)
+	// 3. Returns the final filePath to be used to create pdf at.
+	filePath = strings.TrimSuffix(filePath, extension) + ".pdf"
 	if extension == ".md" {
 		m.IsMD = true
 	} else {
 		m.IsMD = false
 	}
-	// 3. Returns the final filePath to be used to create pdf at.
-	filePath = path.Join(parentDir, itemIndex+fileName+".pdf")
+
 	return
 }

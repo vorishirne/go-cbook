@@ -2,8 +2,8 @@
   "baseUrl": "https://go.dev/blog/",
   "baseDir": "blog/go/",
   "histPointer": "g",
+  "cssZOverrideFile": "css/go-blog.css",
   "objectOptions": {
-    "enableJavascript": true,
-    "userStylesheetLocation": "css/go-blog.css"
+    "enableJavascript": true
   }
 }
