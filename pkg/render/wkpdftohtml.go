@@ -20,7 +20,7 @@ func (r *Render) GenPDF() (err error) {
 
 	// updating html related properties
 	htmlObject.UseLocalLinks = true
-
+	htmlObject.UserStylesheetLocation = r.CSSOverridePath
 	// properties from mod file
 	// if and only if there is something to override, otherwise json unmarshal gives error
 	// e: unexpected end of JSON input

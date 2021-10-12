@@ -77,6 +77,9 @@ func (m *Mod) GetDirVisited() (err error) {
 	_, err = os.Stat(dirIndexGobPath)
 	if errors.Is(err, os.ErrNotExist) {
 		err = nil
+		if m.HistPointer == "" {
+			m.HistPointer = "0"
+		}
 		m.dirVisited = map[string]*DirVisited{"": {
 			IndexedDirPath: m.BaseDir,
 			ItemCount:      0,
