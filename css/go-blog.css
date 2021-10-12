@@ -1,14 +1,3 @@
-* {
-    word-wrap: break-word;
-}
-
-pre code {
-    white-space: break-spaces;
-}
-
-footer {
-    display: none;
-}
 
 #blog .Article {
     padding: 0 !important;

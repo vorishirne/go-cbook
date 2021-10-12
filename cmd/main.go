@@ -36,7 +36,7 @@ func main() {
 	defer pdf.Destroy()
 
 	// this is the name of mod file & url file
-	target := "istio-docs"
+	target := "go-blogs"
 
 	// RenderFromUrlFile is the root function to iterate
 	// over every url present in the provided url file

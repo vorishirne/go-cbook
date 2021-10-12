@@ -1,0 +1,17 @@
+footer {
+    display: none !important;
+}
+
+pre code {
+    white-space: break-spaces !important;
+}
+
+* {
+    text-decoration-color: black !important;
+    word-wrap: break-word !important;
+}
+
+body {
+    color: black !important;
+}
+
