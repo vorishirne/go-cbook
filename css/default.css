@@ -8,7 +8,8 @@ pre code {
 
 * {
     text-decoration-color: black !important;
-    word-wrap: break-word !important;
+    word-break: break-word !important;
+
 }
 
 body {
