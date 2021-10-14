@@ -8,3 +8,4 @@ require (
 	github.com/pdfcpu/pdfcpu v0.3.12
 	github.com/watergist/file-engine v1.9.1
 )
+replace github.com/watergist/file-engine => ../file-engine

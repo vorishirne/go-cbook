@@ -24,13 +24,12 @@ func main() {
 	}
 	defer pdf.Destroy()
 	GeneratePDFs()
-	CompileBook()
 }
 
-func GeneratePDFs()  {
+func GeneratePDFs() {
 
 	// this is the name of mod file & url file
-	target := "go-blogs"
+	target := "istio-docs"
 
 	// RenderFromUrlFile is the root function to iterate
 	// over every url present in the provided url file
@@ -40,8 +39,4 @@ func GeneratePDFs()  {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func CompileBook()  {
-
 }

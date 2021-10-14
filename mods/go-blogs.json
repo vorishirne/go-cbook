@@ -1,4 +1,5 @@
 {
+  "bookName": "golang stories",
   "baseUrl": "https://go.dev/blog/",
   "baseDir": "blog/go/",
   "histPointer": "g",

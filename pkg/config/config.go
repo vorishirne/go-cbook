@@ -2,7 +2,7 @@ package config
 
 import (
 	"errors"
-	"github.com/velcrine/goreader/pkg/bookify"
+	"github.com/velcrine/goreader/pkg/merge"
 	"github.com/velcrine/goreader/pkg/pdfrender"
 	"github.com/velcrine/goreader/pkg/render"
 	"github.com/watergist/file-engine/reader"
@@ -49,6 +49,6 @@ func RenderFromUrlFile(urlFilePath string, modeFilePath string) (err error) {
 	// so errMap is a dict for key: url, v: error returned while rendering it.
 	structure.WriteYaml(
 		path.Join(m.BaseDir, m.HistPointer+"err.yaml"), errMap)
-	err = bookify.CompileToBook(m)
+	err = merge.CompileToBook(m)
 	return
 }

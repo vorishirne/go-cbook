@@ -24,6 +24,8 @@ type DirVisited struct {
 	DirIndex string
 }
 type Mod struct {
+	// a book name when compiling books
+	BookName string
 	// this file is merged with global css rules and passed to wkhtmltopdf
 	CssOverrideFile string
 	// the base url to be taken away as prefix from the urls' paths
@@ -67,6 +69,7 @@ func GetMod(modFilePath string) (m *Mod, err error) {
 	}
 
 	m.BaseDir = strings.TrimSuffix(m.BaseDir, "/")
+	m.BaseDir = strings.TrimSpace(m.BaseDir)
 	return
 }
 
