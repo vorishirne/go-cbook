@@ -45,7 +45,7 @@ type Mod struct {
 	// it is set iteratively everytime a url is processed
 	IsMD                 bool
 	IndexedBookmarkNames bool
-	GenBook              bool
+	DisableBookGen       bool
 	//		   map[rawFilePath]dataForIndex
 	dirVisited map[string]*DirVisited
 }

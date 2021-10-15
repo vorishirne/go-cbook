@@ -52,7 +52,7 @@ func RenderFromUrlFile(urlFilePath string, modeFilePath string) (err error) {
 	if err != nil {
 		return
 	}
-	if m.GenBook {
+	if !m.DisableBookGen {
 		err = merge.CompileToBook(m)
 	}
 	return

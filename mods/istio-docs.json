@@ -11,6 +11,6 @@
     "height":"68.4",
     "width": "90"
   },
-  "genBook": true,
+  "disableBookGen": false,
   "indexedBookmarkNames": true
 }
