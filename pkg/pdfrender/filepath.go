@@ -22,13 +22,13 @@ func (m *Mod) GetRawFilePath(webPageUrl string) (filePath string, err error) {
 	if err != nil {
 		return
 	}
-	baseUrlPath := strings.Trim(m.State.CurrentURLProperties.Path, "/")
+	baseUrlPath := strings.TrimSpace(strings.Trim(m.State.CurrentURLProperties.Path, "/"))
 	if err != nil {
 		return
 	}
 
 	// get their trimmed paths
-	webPageUrlPath := strings.Trim(webPageUrlObj.Path, "/")
+	webPageUrlPath := strings.TrimSpace(strings.Trim(webPageUrlObj.Path, "/"))
 
 	// if it has some piece of fragment, then pick fragment as filePath
 	// this trick is used to set filePath for blogs, that have no standard filePath structure
@@ -36,7 +36,7 @@ func (m *Mod) GetRawFilePath(webPageUrl string) (filePath string, err error) {
 		filePath = strings.Trim(webPageUrlObj.Fragment, "/")
 	} else if strings.HasPrefix(webPageUrlPath, baseUrlPath) {
 		// else originally remove basePath from urlPath to get filePath
-		filePath = strings.TrimPrefix(webPageUrlPath, baseUrlPath)
+		filePath = strings.Trim(strings.TrimPrefix(webPageUrlPath, baseUrlPath), "/")
 	} else {
 		// no options left to get filePath
 		err = fmt.Errorf("mod base url %v not valid for %v",
