@@ -29,34 +29,13 @@ func main() {
 func GeneratePDFs() {
 
 	// this is the name of mod file & url file
-	target := "istio-docs"
+
+	target := "ssh-keys"
 
 	// RenderFromUrlFile is the root function to iterate
 	// over every url present in the provided url file
 	// and calls pdf-render process
 	err := config.RenderFromUrlFile(fmt.Sprintf("urls/%v.url", target),
-		fmt.Sprintf("mods/%v.json", target))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	target = "ssh-keys"
-
-	// RenderFromUrlFile is the root function to iterate
-	// over every url present in the provided url file
-	// and calls pdf-render process
-	err = config.RenderFromUrlFile(fmt.Sprintf("urls/%v.url", target),
-		fmt.Sprintf("mods/%v.json", target))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	target = "go-blogs"
-
-	// RenderFromUrlFile is the root function to iterate
-	// over every url present in the provided url file
-	// and calls pdf-render process
-	err = config.RenderFromUrlFile(fmt.Sprintf("urls/%v.url", target),
 		fmt.Sprintf("mods/%v.json", target))
 	if err != nil {
 		log.Fatal(err)
