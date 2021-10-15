@@ -1,6 +1,7 @@
 package merge
 
 import (
+	"fmt"
 	"github.com/pdfcpu/pdfcpu/pkg/api"
 	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu"
 	"github.com/watergist/file-engine/list"
@@ -28,8 +29,13 @@ func (mState *PDFMergeState) TriggerEveryPDFMergeInOrder(nTree *list.NestedPathT
 		if lastItem == "" {
 			return
 		} else if !mState.IndexedBookmarkNames {
-			reg := regexp.MustCompile(`\w(?:\d\d-)*(.*)\.pdf`)
+			reg := regexp.MustCompile(`\w(?:\d\d-)*(.*)`)
 			lastItem = reg.ReplaceAllString(lastItem, "${1}")
+			if lastItem == "" {
+				err = fmt.Errorf("%v is not a valid pattern, for indexed", pdfFileOrDir.Path)
+				return
+			}
+			lastItem = strings.TrimSuffix(lastItem, ".pdf")
 		}
 		if pdfFileOrDir.NestedPathTree == nil {
 			b, err = mState.MergePdf(pdfFileOrDir.Path, bookmark)

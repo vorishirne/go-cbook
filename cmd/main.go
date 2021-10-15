@@ -29,7 +29,8 @@ func main() {
 func GeneratePDFs() {
 
 	// this is the name of mod file & url file
-	target := "istio-docs"
+	//target := "istio-docs"
+	target := "ssh-keys"
 
 	// RenderFromUrlFile is the root function to iterate
 	// over every url present in the provided url file
