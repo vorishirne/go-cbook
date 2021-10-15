@@ -57,21 +57,23 @@ func GetMod(modFilePath string) (m *Mod, err error) {
 		return
 	}
 	m = &Mod{}
-	if m.HistPointer == "" {
-		m.HistPointer = "0"
-	}
+
 	err = json.Unmarshal(modFile, m)
 	if err != nil {
 		return
 	}
+	if m.HistPointer == "" {
+		m.HistPointer = "0"
+	}
+	m.BaseDir = path.Join(m.BaseDir, m.HistPointer)
+	m.BaseDir = strings.TrimSuffix(m.BaseDir, "/")
+	m.BaseDir = strings.TrimSpace(m.BaseDir)
 
 	err = m.GetDirVisited()
 	if err != nil {
 		return
 	}
 
-	m.BaseDir = strings.TrimSuffix(m.BaseDir, "/")
-	m.BaseDir = strings.TrimSpace(m.BaseDir)
 	return
 }
 
@@ -88,7 +90,6 @@ func (m *Mod) GetDirVisited() (err error) {
 		m.dirVisited = map[string]*DirVisited{"": {
 			IndexedDirPath: m.BaseDir,
 			ItemCount:      0,
-			DirIndex:       m.HistPointer,
 		}}
 		return
 	}

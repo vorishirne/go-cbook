@@ -40,8 +40,10 @@ func (r *Render) GenPDF() (err error) {
 
 	// updating pdf related properties
 	converter.Title = "Start the fire"
+	// https://doc.qt.io/archives/qt-4.8/qprinter.html#PaperSize-enum
 	converter.Height = "76"
 	converter.Width = "100"
+
 	converter.Orientation = pdf.Portrait
 	converter.MarginTop = "0mm"
 	converter.MarginBottom = "0mm"

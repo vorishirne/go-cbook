@@ -7,6 +7,10 @@
   "objectOptions": {
     "enableJavascript": true
   },
+  "converterOptions": {
+    "height":"68.4",
+    "width": "90"
+  },
   "genBook": true,
   "indexedBookmarkNames": true
 }

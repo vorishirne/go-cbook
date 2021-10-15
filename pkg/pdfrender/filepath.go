@@ -58,7 +58,7 @@ func (m *Mod) GetIndexedDir(rawDir string) (indexedCurrentDir, indexForNewItem s
 	if visitedDir, ok := m.dirVisited[rawDir]; ok {
 		visitedDir.ItemCount++
 		indexedCurrentDir = visitedDir.IndexedDirPath
-		indexForNewItem = visitedDir.DirIndex + "-" + fmt.Sprintf("%02d", visitedDir.ItemCount)
+		indexForNewItem = visitedDir.DirIndex + fmt.Sprintf("%02d", visitedDir.ItemCount) + "-"
 		return
 	}
 
@@ -76,7 +76,7 @@ func (m *Mod) GetIndexedDir(rawDir string) (indexedCurrentDir, indexForNewItem s
 	}
 	indexedCurrentDir = path.Join(indexedParentDir, indexForCurrentDir+rawCurrentDir)
 
-	indexForNewItem = indexForCurrentDir + "-" + fmt.Sprintf("%02d", 1)
+	indexForNewItem = indexForCurrentDir + fmt.Sprintf("%02d", 1) + "-"
 	m.dirVisited[rawDir] = &DirVisited{
 		indexedCurrentDir, 1, indexForCurrentDir}
 	return
