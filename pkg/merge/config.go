@@ -15,6 +15,7 @@ import (
 type PDFMergeState struct {
 	BaseDir                 string
 	OutPath                 string
+	IndexedBookmarkNames    bool
 	parentBookmark          *pdfcpu.Bookmark
 	currentBookmark         *pdfcpu.Bookmark
 	currentPageCountReached int
@@ -49,8 +50,9 @@ func CompileToBook(m *pdfrender.Mod) (err error) {
 	}
 
 	mState := &PDFMergeState{
-		BaseDir: m.BaseDir,
-		OutPath: mergedBookPath,
+		BaseDir:              m.BaseDir,
+		OutPath:              mergedBookPath,
+		IndexedBookmarkNames: m.IndexedBookmarkNames,
 	}
 
 	var b *pdfcpu.Bookmark

@@ -6,5 +6,7 @@
   "cssOverrideFile": "css/istio.css",
   "objectOptions": {
     "enableJavascript": true
-  }
+  },
+  "genBook": true,
+  "indexedBookmarkNames": true
 }

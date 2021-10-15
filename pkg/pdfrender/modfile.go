@@ -43,7 +43,9 @@ type Mod struct {
 	ConverterOptions *json.RawMessage
 	// IsMD is set when the url ends with .md
 	// it is set iteratively everytime a url is processed
-	IsMD bool
+	IsMD                 bool
+	IndexedBookmarkNames bool
+	GenBook              bool
 	//		   map[rawFilePath]dataForIndex
 	dirVisited map[string]*DirVisited
 }

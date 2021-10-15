@@ -40,8 +40,9 @@ func (r *Render) GenPDF() (err error) {
 
 	// updating pdf related properties
 	converter.Title = "Start the fire"
-	converter.PaperSize = pdf.A7
-	converter.Orientation = pdf.Landscape
+	converter.Height = "76"
+	converter.Width = "100"
+	converter.Orientation = pdf.Portrait
 	converter.MarginTop = "0mm"
 	converter.MarginBottom = "0mm"
 	converter.MarginLeft = "0mm"

@@ -45,10 +45,15 @@ func RenderFromUrlFile(urlFilePath string, modeFilePath string) (err error) {
 	if err != nil {
 		return
 	}
-	err = m.SaveDirVisited()
-	// so errMap is a dict for key: url, v: error returned while rendering it.
 	structure.WriteYaml(
 		path.Join(m.BaseDir, m.HistPointer+"err.yaml"), errMap)
-	err = merge.CompileToBook(m)
+	err = m.SaveDirVisited()
+	// so errMap is a dict for key: url, v: error returned while rendering it.
+	if err != nil {
+		return
+	}
+	if m.GenBook {
+		err = merge.CompileToBook(m)
+	}
 	return
 }

@@ -5,6 +5,7 @@ import (
 	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu"
 	"github.com/watergist/file-engine/list"
 	"github.com/watergist/file-engine/reader"
+	"regexp"
 	"strings"
 )
 
@@ -26,9 +27,9 @@ func (mState *PDFMergeState) TriggerEveryPDFMergeInOrder(nTree *list.NestedPathT
 		_, lastItem, err = reader.GetDirPathAndFileName(pdfFileOrDir.Path, true)
 		if lastItem == "" {
 			return
-		} else {
-			//reg := regexp.MustCompile(`\w(?:-\d\d)*(.*)`)
-			//lastItem = reg.ReplaceAllString(lastItem, "${1}")
+		} else if !mState.IndexedBookmarkNames {
+			reg := regexp.MustCompile(`\w(?:-\d\d)*(.*)`)
+			lastItem = reg.ReplaceAllString(lastItem, "${1}")
 		}
 		if pdfFileOrDir.NestedPathTree == nil {
 			b, err = mState.MergePdf(pdfFileOrDir.Path, bookmark)
