@@ -1,10 +1,6 @@
 {
   "bookName": "golang stories",
   "baseUrl": "https://go.dev/blog/",
-  "baseDir": "blog/go/",
   "histPointer": "g",
-  "cssOverrideFile": "css/go-blog.css",
-  "objectOptions": {
-    "enableJavascript": true
-  }
+  "indexedBookmarkNames": true
 }

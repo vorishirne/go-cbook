@@ -16,6 +16,8 @@ const TempCSSFilePath = GoReaderRenderTempDir + "/current.css"
 const DefaultCssFile = "css/default.css"
 
 type Render struct {
+	SiteObjectOptions    *json.RawMessage
+	SiteConverterOptions *json.RawMessage
 	// these options are passed to the wkhtmltopdf object
 	// could be used for overriding default ones in this repository
 	ObjectOptions *json.RawMessage
@@ -32,11 +34,13 @@ type Render struct {
 
 func Do(m *pdfrender.Mod, URL, outputFilePath string) (err error) {
 	render := Render{
-		ObjectOptions:    m.ObjectOptions,
-		ConverterOptions: m.ConverterOptions,
-		URL:              URL,
-		OutputFilePath:   outputFilePath,
-		CSSOverridePath:  DefaultCssFile,
+		ObjectOptions:        m.ObjectOptions,
+		ConverterOptions:     m.ConverterOptions,
+		SiteObjectOptions:    m.State.CurrentURLProperties.ObjectOptions,
+		SiteConverterOptions: m.State.CurrentURLProperties.ConverterOptions,
+		URL:                  URL,
+		OutputFilePath:       outputFilePath,
+		CSSOverridePath:      TempCSSFilePath,
 	}
 	if m.IsMD {
 		err = render.CompileMDtoHTML()
@@ -44,13 +48,13 @@ func Do(m *pdfrender.Mod, URL, outputFilePath string) (err error) {
 			return
 		}
 	}
-	if m.CssOverrideFile != "" {
-		render.CSSOverridePath = TempCSSFilePath
-		err = reader.CopyContent(TempCSSFilePath, DefaultCssFile, m.CssOverrideFile)
-		if err != nil {
-			return
-		}
+
+	err = reader.CopyContent(TempCSSFilePath, DefaultCssFile,
+		m.State.CurrentURLProperties.CssOverrideFile, m.CssOverrideFile)
+	if err != nil {
+		return
 	}
+
 	err = render.GenPDF()
 	return
 }

@@ -1,0 +1,33 @@
+{
+  "medium.com": {
+    "path": "",
+    "cssOverrideFile": "css/medium.css",
+    "objectOptions": {
+      "enableJavascript": false
+    }
+  },
+  "blog.jetbrains.com": {
+    "path": "",
+    "cssOverrideFile": "css/blog-jetbrains.css"
+  },
+  "istio.io": {
+    "path": "latest/docs",
+    "cssOverrideFile": "css/istio.css",
+    "converterOptions": {
+      "height": "68.4",
+      "width": "90"
+    }
+  },
+  "pkg.go.dev": {
+    "path": "",
+    "cssOverrideFile": "css/go-blog.css"
+  },
+  "go.dev/blog": {
+    "path": "",
+    "cssOverrideFile": "css/go-blog.css"
+  },
+  "envoyproxy.io/docs/envoy/latest": {
+    "path": "docs/envoy/latest",
+    "cssOverrideFile": "css/envoy.css"
+  }
+}

@@ -28,7 +28,7 @@ func (mState *PDFMergeState) TriggerEveryPDFMergeInOrder(nTree *list.NestedPathT
 		if lastItem == "" {
 			return
 		} else if !mState.IndexedBookmarkNames {
-			reg := regexp.MustCompile(`\w(?:-\d\d)*(.*)`)
+			reg := regexp.MustCompile(`\w(?:\d\d-)*(.*)\.pdf`)
 			lastItem = reg.ReplaceAllString(lastItem, "${1}")
 		}
 		if pdfFileOrDir.NestedPathTree == nil {

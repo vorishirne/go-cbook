@@ -5,12 +5,25 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/watergist/file-engine/reader"
+	"github.com/watergist/file-engine/reader/structure"
 	"os"
 	"path"
 	"strings"
 )
 
 var webPageExtensions = []string{"html", "md", "htm", "hbs", "cms", "php"}
+
+type URLProperties struct {
+	Path string
+	// this file is merged with global css rules and passed to wkhtmltopdf
+	CssOverrideFile string
+	// these options are passed to the wkhtmltopdf object
+	// could be used for overriding default ones in this repository
+	ObjectOptions *json.RawMessage
+	// these options are passed to the wkhtmltopdf converter
+	// could be used for overriding default ones in this repository
+	ConverterOptions *json.RawMessage
+}
 
 // DirVisited allows you to save below information for multiple urls
 // not just for caching purpose, but also for to keep track of info for created dirs
@@ -23,15 +36,14 @@ type DirVisited struct {
 	// that needs to be available for sending to create the item in this dir.
 	DirIndex string
 }
+
 type Mod struct {
 	// a book name when compiling books
 	BookName string
+	// the base url to be taken away as prefix from the urls' paths
+	BaseDir string
 	// this file is merged with global css rules and passed to wkhtmltopdf
 	CssOverrideFile string
-	// the base url to be taken away as prefix from the urls' paths
-	BaseUrl string
-	// base parent dir to all the dirs
-	BaseDir string
 	// a rune, to mark the current running set of files & dirs, that will be
 	// differentiated from the past available files &dirs
 	HistPointer string
@@ -46,6 +58,10 @@ type Mod struct {
 	IsMD                 bool
 	IndexedBookmarkNames bool
 	DisableBookGen       bool
+	State                struct {
+		CurrentURLProperties *URLProperties
+		AllPropertiesFile    map[string]*URLProperties
+	}
 	//		   map[rawFilePath]dataForIndex
 	dirVisited map[string]*DirVisited
 }
@@ -56,7 +72,12 @@ func GetMod(modFilePath string) (m *Mod, err error) {
 	if err != nil {
 		return
 	}
-	m = &Mod{}
+	m = &Mod{
+		State: struct {
+			CurrentURLProperties *URLProperties
+			AllPropertiesFile    map[string]*URLProperties
+		}{AllPropertiesFile: make(map[string]*URLProperties)},
+	}
 
 	err = json.Unmarshal(modFile, m)
 	if err != nil {
@@ -73,6 +94,10 @@ func GetMod(modFilePath string) (m *Mod, err error) {
 	if err != nil {
 		return
 	}
+
+	m.State.AllPropertiesFile = make(map[string]*URLProperties)
+	structure.LoadJsonFile("mods/webpages-properties.json",
+		&m.State.AllPropertiesFile)
 
 	return
 }

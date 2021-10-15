@@ -1,16 +1,6 @@
 {
   "bookName": "mister istio",
-  "baseUrl": "https://istio.io/latest/docs/",
   "baseDir": "docs/istio/",
   "histPointer": "i",
-  "cssOverrideFile": "css/istio.css",
-  "objectOptions": {
-    "enableJavascript": true
-  },
-  "converterOptions": {
-    "height":"68.4",
-    "width": "90"
-  },
-  "disableBookGen": false,
   "indexedBookmarkNames": true
 }
