@@ -98,7 +98,7 @@ func (m *Mod) GetIndexedFilePath(rawPath string) (indexedCurrentFilePath string,
 func (m *Mod) SetURLProperties(url string) (err error) {
 	lowestIndex := math.MaxInt64
 	key := ""
-	for k := range m.State.AllPropertiesFile {
+	for k := range m.allPropertiesFile {
 		if index := strings.Index(url, k); index > -1 {
 			if index < lowestIndex {
 				key = k
@@ -109,6 +109,6 @@ func (m *Mod) SetURLProperties(url string) (err error) {
 	if key == "" {
 		return fmt.Errorf("no host matched with url %v", url)
 	}
-	m.State.CurrentURLProperties = m.State.AllPropertiesFile[key]
+	m.State.CurrentURLProperties = m.allPropertiesFile[key]
 	return
 }

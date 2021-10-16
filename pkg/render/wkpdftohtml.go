@@ -8,10 +8,10 @@ import (
 	pdf "github.com/adrg/go-wkhtmltopdf"
 )
 
-// GenPDF receives the final path and URL
-// URL is passed as is to the wkhtmltopdf
-// and outputFilePath is provided as the destination to write file to as is
-// meanwhile, object and converter options from mod file are overridden
+// GenPDF receives the final render object
+// OutputFilePath is provided as the destination to write file to as is
+// Also, object and converter options from mod file and webpage-properties
+// files do override defaultly set
 func (r *Render) GenPDF() (err error) {
 	htmlObject, err := pdf.NewObject(r.URL)
 	if err != nil {
@@ -20,16 +20,18 @@ func (r *Render) GenPDF() (err error) {
 
 	// updating html related properties
 	htmlObject.UseLocalLinks = true
-	htmlObject.UserStylesheetLocation = r.CSSOverridePath
-	// properties from mod file
+	htmlObject.UserStylesheetLocation = TempCSSFilePath
 	// if and only if there is something to override, otherwise json unmarshal gives error
 	// e: unexpected end of JSON input
+
+	// options from webpage-properties file
 	if r.SiteObjectOptions != nil && len(*r.SiteObjectOptions) > 0 {
 		err = json.Unmarshal(*r.SiteObjectOptions, &htmlObject)
 	}
 	if err != nil {
 		return
 	}
+	// options from mod file
 	if r.ObjectOptions != nil && len(*r.ObjectOptions) > 0 {
 		err = json.Unmarshal(*r.ObjectOptions, &htmlObject)
 	}
@@ -57,15 +59,17 @@ func (r *Render) GenPDF() (err error) {
 	converter.MarginRight = "0mm"
 	converter.Colorspace = pdf.Grayscale
 
-	// properties from mod file
 	// if and only if there is something to override, otherwise json unmarshal gives error
 	// e: unexpected end of JSON input
+
+	// options from webpage-properties file
 	if r.SiteConverterOptions != nil && len(*r.SiteConverterOptions) > 0 {
 		err = json.Unmarshal(*r.SiteConverterOptions, &converter)
 	}
 	if err != nil {
 		return
 	}
+	// options from mod file
 	if r.ConverterOptions != nil && len(*r.ConverterOptions) > 0 {
 		err = json.Unmarshal(*r.ConverterOptions, &converter)
 	}
@@ -79,6 +83,7 @@ func (r *Render) GenPDF() (err error) {
 	}
 	defer func() {
 		_ = outFile.Close()
+		// if the response is an error, delete the created empty file
 		if err != nil {
 			err = os.Remove(r.OutputFilePath)
 			if err != nil {

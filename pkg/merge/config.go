@@ -12,28 +12,36 @@ import (
 	"strings"
 )
 
+// PDFMergeState shares data across the merged pdf generation process
 type PDFMergeState struct {
-	BaseDir                 string
-	OutPath                 string
-	IndexedBookmarkNames    bool
-	parentBookmark          *pdfcpu.Bookmark
-	currentBookmark         *pdfcpu.Bookmark
+	// m.BaseDir set here
+	BaseDir string
+	// the path to put merged file at
+	OutPath string
+	// if set true, index in bookmark names will be there
+	IndexedBookmarkNames bool
+	// number of pages covered so far, so that new bookmark be started from this +1
 	currentPageCountReached int
 }
 
 func CompileToBook(m *pdfrender.Mod) (err error) {
+	// generate a file tree
 	tree := list.Read(&[]string{m.BaseDir}, -1)
+	// a nested tree is what we want
 	tree.GenerateNestedTree = true
+	// and also we want it to preserve the order in slice,
+	// which will not be the case in map
 	tree.GenerateNestedTreeFileOrder = true
-
 	err = tree.UpdateFiles()
 	if err != nil {
 		return
 	}
+
 	if len(tree.NestedPathTree) != 1 {
 		return fmt.Errorf("expected only one tree from list tree got %v", len(tree.NestedPathTree))
 	}
 
+	// compute the outPath
 	mergedBookPath := strings.ReplaceAll(m.BaseDir, "/", "-")
 	mergedBookPath = strings.TrimPrefix(mergedBookPath, "-")
 	mergedBookPath = path.Join(m.BaseDir, mergedBookPath) + ".pdf"
@@ -55,14 +63,19 @@ func CompileToBook(m *pdfrender.Mod) (err error) {
 		IndexedBookmarkNames: m.IndexedBookmarkNames,
 	}
 
+	// this will have the final parent bookmark
 	var b *pdfcpu.Bookmark
+
 	b, err = mState.TriggerEveryPDFMergeInOrder(tree.NestedPathTree[m.BaseDir], nil)
 	if err != nil {
 		return
 	}
+
 	b.Title = m.BookName
+	// we only know at the end the final amount of pages
 	b.PageThru = mState.currentPageCountReached
 
+	// write bookmark to file
 	err = api.AddBookmarksFile(mState.OutPath, mState.OutPath,
 		[]pdfcpu.Bookmark{*b}, nil)
 	return

@@ -37,6 +37,13 @@ type DirVisited struct {
 	DirIndex string
 }
 
+type CurrentUrlState struct {
+	// IsMD is set when the url ends with .md
+	// it is set iteratively everytime a url is processed
+	IsMD                 bool
+	CurrentURLProperties *URLProperties
+}
+
 type Mod struct {
 	// a book name when compiling books
 	BookName string
@@ -52,18 +59,13 @@ type Mod struct {
 	ObjectOptions *json.RawMessage
 	// these options are passed to the wkhtmltopdf converter
 	// could be used for overriding default ones in this repository
-	ConverterOptions *json.RawMessage
-	// IsMD is set when the url ends with .md
-	// it is set iteratively everytime a url is processed
-	IsMD                 bool
+	ConverterOptions     *json.RawMessage
 	IndexedBookmarkNames bool
 	DisableBookGen       bool
-	State                struct {
-		CurrentURLProperties *URLProperties
-		AllPropertiesFile    map[string]*URLProperties
-	}
+	State                CurrentUrlState
 	//		   map[rawFilePath]dataForIndex
-	dirVisited map[string]*DirVisited
+	dirVisited        map[string]*DirVisited
+	allPropertiesFile map[string]*URLProperties
 }
 
 // GetMod prepares the Mod struct from mod json file provided
@@ -73,10 +75,7 @@ func GetMod(modFilePath string) (m *Mod, err error) {
 		return
 	}
 	m = &Mod{
-		State: struct {
-			CurrentURLProperties *URLProperties
-			AllPropertiesFile    map[string]*URLProperties
-		}{AllPropertiesFile: make(map[string]*URLProperties)},
+		allPropertiesFile: make(map[string]*URLProperties),
 	}
 
 	err = json.Unmarshal(modFile, m)
@@ -95,9 +94,8 @@ func GetMod(modFilePath string) (m *Mod, err error) {
 		return
 	}
 
-	m.State.AllPropertiesFile = make(map[string]*URLProperties)
 	structure.LoadJsonFile("mods/webpages-properties.json",
-		&m.State.AllPropertiesFile)
+		&m.allPropertiesFile)
 
 	return
 }
@@ -184,9 +182,9 @@ func (m *Mod) GetFilePath(webUrl string) (filePath string, err error) {
 	// 3. Returns the final filePath to be used to create pdf at.
 	filePath = strings.TrimSuffix(filePath, extension) + ".pdf"
 	if extension == ".md" {
-		m.IsMD = true
+		m.State.IsMD = true
 	} else {
-		m.IsMD = false
+		m.State.IsMD = false
 	}
 
 	return
