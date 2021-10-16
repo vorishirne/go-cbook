@@ -11,7 +11,6 @@ func TestMod_GetFilePath(t *testing.T) {
 		// here it is compulsary for scheme(https/http) to be present
 		// otherwise net package wouldn't work.
 		// hence, no need for exclusive normalization for scheme
-		BaseUrl:       "https://www.medium.com/.*",
 		BaseDir:       "envoy-blogs",
 		HistPointer:   "i",
 		ObjectOptions: &objectOptionsBytes,
