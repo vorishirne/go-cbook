@@ -18,7 +18,7 @@ func (m *Mod) GetRawFilePath(webPageUrl string) (filePath string, err error) {
 	if err != nil {
 		return
 	}
-	m.State.CurrentURLProperties, err = urlproperties.SetURLProperties(m, webPageUrl)
+	m.State.CurrentURLProperties, err = urlproperties.SetURLProperties(webPageUrl)
 	if err != nil {
 		return
 	}

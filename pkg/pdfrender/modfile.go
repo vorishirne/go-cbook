@@ -80,6 +80,10 @@ func GetMod(modFilePath string) (m *Mod, err error) {
 		return
 	}
 
+	err = urlproperties.Init(m.PropertiesFiles)
+	if err != nil {
+		return
+	}
 	return
 }
 
@@ -100,7 +104,9 @@ func (m *Mod) GetDirVisited() (err error) {
 		return
 	}
 	gobFile, err := os.Open(dirIndexGobPath)
-	defer gobFile.Close()
+	defer func() {
+		_ = gobFile.Close()
+	}()
 	if err != nil {
 		return
 	}
@@ -122,7 +128,9 @@ func (m *Mod) SaveDirVisited() (err error) {
 	if err != nil {
 		return
 	}
-	defer gobFile.Close()
+	defer func() {
+		_ = gobFile.Close()
+	}()
 	gobEncoder := gob.NewEncoder(gobFile)
 	err = gobEncoder.Encode(m.dirVisited)
 	return

@@ -3,7 +3,6 @@ package urlproperties
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/velcrine/goreader/pkg/pdfrender"
 	"github.com/watergist/file-engine/reader/structure"
 	"math"
 	"strings"
@@ -23,18 +22,21 @@ type URLProperties struct {
 	ConverterOptions *json.RawMessage
 }
 
-var allPropertiesFile map[string]*URLProperties
+var allProperties map[string]*URLProperties
 
 func Init(propertiesFiles []string) (err error) {
-	allPropertiesFile = make(map[string]*URLProperties)
+	if allProperties != nil {
+		return
+	}
+	allProperties = make(map[string]*URLProperties)
 	err, _ = structure.LoadJsonFile(DefaultPropertiesFile,
-		&allPropertiesFile)
+		&allProperties)
 	if err != nil {
 		return
 	}
 	for _, v := range propertiesFiles {
 		err, _ = structure.LoadJsonFile(v,
-			&allPropertiesFile)
+			&allProperties)
 		if err != nil {
 			return
 		}
@@ -42,14 +44,17 @@ func Init(propertiesFiles []string) (err error) {
 	return
 }
 
-func SetURLProperties(m *pdfrender.Mod, url string) (properties *URLProperties, err error) {
-	err = Init(m.PropertiesFiles)
+func SetURLProperties(url string) (properties *URLProperties, err error) {
+	if allProperties == nil {
+		err = fmt.Errorf("properties uninitialized")
+		return
+	}
 	if err != nil {
 		return
 	}
 	lowestIndex := math.MaxInt64
 	key := ""
-	for k := range allPropertiesFile {
+	for k := range allProperties {
 		if index := strings.Index(url, k); index > -1 {
 			if index < lowestIndex {
 				key = k
@@ -60,6 +65,6 @@ func SetURLProperties(m *pdfrender.Mod, url string) (properties *URLProperties, 
 	if key == "" {
 		return nil, fmt.Errorf("no host matched with url %v", url)
 	}
-	properties = allPropertiesFile[key]
+	properties = allProperties[key]
 	return
 }
