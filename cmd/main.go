@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	pdf "github.com/adrg/go-wkhtmltopdf"
-	"github.com/velcrine/goreader/pkg/config"
+	"github.com/vorishirne/go-cbook/pkg/config"
 	"log"
 	"runtime"
 )

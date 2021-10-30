@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/parser"
-	"github.com/velcrine/goreader/pkg/pdfrender"
-	"github.com/watergist/file-engine/reader"
-	"github.com/watergist/file-engine/webclient"
+	"github.com/vorishirne/go-cbook/pkg/pdfrender"
+	"github.com/vorishirne/goreader/reader"
+	"github.com/vorishirne/goreader/webclient"
 	"os"
 )
 

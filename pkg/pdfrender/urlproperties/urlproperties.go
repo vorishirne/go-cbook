@@ -3,7 +3,7 @@ package urlproperties
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/watergist/file-engine/reader/structure"
+	"github.com/vorishirne/goreader/reader/structure"
 	"math"
 	"strings"
 )

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/pdfcpu/pdfcpu/pkg/api"
 	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu"
-	"github.com/watergist/file-engine/list"
-	"github.com/watergist/file-engine/reader"
+	"github.com/vorishirne/goreader/list"
+	"github.com/vorishirne/goreader/reader"
 	"regexp"
 	"strings"
 )

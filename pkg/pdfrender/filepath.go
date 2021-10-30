@@ -2,7 +2,7 @@ package pdfrender
 
 import (
 	"fmt"
-	"github.com/velcrine/goreader/pkg/pdfrender/urlproperties"
+	"github.com/vorishirne/go-cbook/pkg/pdfrender/urlproperties"
 	"net/url"
 	"path"
 	"strings"

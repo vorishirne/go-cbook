@@ -2,11 +2,11 @@ package config
 
 import (
 	"errors"
-	"github.com/velcrine/goreader/pkg/merge"
-	"github.com/velcrine/goreader/pkg/pdfrender"
-	"github.com/velcrine/goreader/pkg/render"
-	"github.com/watergist/file-engine/reader"
-	"github.com/watergist/file-engine/reader/structure"
+	"github.com/vorishirne/go-cbook/pkg/merge"
+	"github.com/vorishirne/go-cbook/pkg/pdfrender"
+	"github.com/vorishirne/go-cbook/pkg/render"
+	"github.com/vorishirne/goreader/reader"
+	"github.com/vorishirne/goreader/reader/structure"
 	"io/fs"
 	"os"
 	"path"
