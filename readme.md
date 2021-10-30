@@ -1,20 +1,33 @@
-# eink-web
+# go-Cbook
+A vitamin C rich, book, pdf & documentation brewing library for e-readers/e-ink readers. Now take priviliges of (eye-safe) e-readers to read the documentations and blogs, by converting them to an e-reader optimized book.
 
-People choose eink readers like kindle, boox and onyx over ipads and phones, as they try to safeguard their eyes while
-doing there book/comics reading.
+## the whys and ifs
 
-But are eyes important to only those who read books. I spend double time from them reading on web, what about me?
+### what if you would be reading your next research article like this
+<p>
+<img src="https://github.com/vorishirne/go-cbook/raw/master/doc/img/preview.jpeg" alt="feed example" width="250">
+</p>
+Me personally, is really concerned about my eyes, not that much for ears,nose and teeth, but eyes.
+Eyes are the potent organ for a software engineer. These led screens we use, haven't been tested yet for a life long 9 hr usage.
+Will human eyes be having no damage for almost permanent usage of these led screens? The fact is not proven yet as we are the first generation, being experimented.
 
-Hence, here comes the eink-web: which basically is all the support you want for reading webpages as pdf. One can collect
-the bookmarks or links to read, and this tool is going to render them as pdfs.
+People choose eink readers like kindle, boox and onyx over ipads and phones, as they try to protect their eyes while reading there books/comics.
 
-Now pdfs are super awesome format when it comes to eink readers, as traversing between pages is lot easier in that case.
+But are eyes important to only those who read books? I spend double time from them reading on web, what about me?
 
-# how to use
+Hence, here comes the go-cbook: which basically is all the support you want for reading webpages as e-reader optimized pdf. One can collect the bookmarks or links to read, and this tool is going to render them as pdfs or a combine them to a book(as pdf).
 
-provide a file, with all the links that need to be downloaded and converted to pdf.
+(Note: In e-readers, pdfs are times easier to render, navigate and size-optimized than webpages.)
 
-there are a bunch of css files & other settings that are previously available for different kind of links, for ex:
+# Gen
+
+1. Add a URl file in urls dir.
+2. If desired, in css dir, custom css rules for the set of urls.
+3. Finally, add modifications in mod dir:
+   1. For sub-urls based rules, add to `webpages-properties.json`
+   2. For overall urls file rules, add to any custom file, with the same name as urls file
+
+##there are a bunch of css files & other settings that are previously available for different kind of links, for ex:
 
 1. k8 docs
 2. istio docs
@@ -24,6 +37,17 @@ there are a bunch of css files & other settings that are previously available fo
 6. github.com/wiki
 7. stackoverflow answers
 
-So what we do is, we match the prefix of the url, for which settings are available, and then apply those.
-
 U can add settings for your own site, by following the available settings in mod directory.
+# Feature list
+- [x] Generate Plain pdf from webpage
+- [x] Add custom css rules for pages before rendering them
+- [x] Provide custom dimensions for each page to render.(see mods file)
+- [x] Generate pdfs in named indexes.
+- [x] Max-possible fit dimensions(only for kindle)
+- [x] Save Max possible state to not-rework again
+- [x] Combine to produce a book
+- [x] Override the paths to put a webpage to.
+- [x] Add bookmarks based on indexes (nested nature of docs)
+  - A must for navigation, in a huge document.
+- [ ] Gen for a single url as input
+- [ ] Send via email, to automate the transfer logic to e-reader.
