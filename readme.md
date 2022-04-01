@@ -27,6 +27,11 @@ Hence, here comes the go-cbook: which basically is all the support you want for 
    1. For sub-urls based rules, add to `webpages-properties.json`
    2. For overall urls file rules, add to any custom file, with the same name as urls file
 
+## Dep
+From https://wkhtmltopdf.org/downloads.html
+wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.focal_amd64.deb
+sudo apt install -y ./wkhtmltox_0.12.6-1.focal_amd64.deb
+
 ##there are a bunch of css files & other settings that are previously available for different kind of links, for ex:
 
 1. k8 docs

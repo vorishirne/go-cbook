@@ -30,11 +30,11 @@ func GeneratePDFs() {
 
 	// this is the name of mod file & url file
 
-	target := "ssh-keys"
+	target := "envoy-l"
 
 	// RenderFromUrlFile is the root function to iterate
 	// over every url present in the provided url file
-	// and calls pdf-render process
+	// and calls pdf-render process, then merge them.
 	err := config.RenderFromUrlFile(fmt.Sprintf("urls/%v.url", target),
 		fmt.Sprintf("mods/%v.json", target))
 	if err != nil {
